@@ -1,0 +1,17 @@
+D:\C#\惯性导航\INS\INS\bin\Debug\net7.0\INS.exe
+D:\C#\惯性导航\INS\INS\bin\Debug\net7.0\INS.deps.json
+D:\C#\惯性导航\INS\INS\bin\Debug\net7.0\INS.runtimeconfig.json
+D:\C#\惯性导航\INS\INS\bin\Debug\net7.0\INS.dll
+D:\C#\惯性导航\INS\INS\bin\Debug\net7.0\INS.pdb
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.csproj.AssemblyReference.cache
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.AssemblyInfoInputs.cache
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.AssemblyInfo.cs
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.csproj.CoreCompileInputs.cache
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.dll
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\refint\INS.dll
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.pdb
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.genruntimeconfig.cache
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\ref\INS.dll
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\Interop.Microsoft.Office.Interop.Excel.dll
+D:\C#\惯性导航\INS\INS\obj\Debug\net7.0\INS.csproj.ResolveComReference.cache
