@@ -1,0 +1,100 @@
+\usepackage{amsmath,float,geometry,fontspec,setspace,bm,hyperref,fancyhdr,wrapfig,mathtools,subcaption}
+\usepackage{enumitem,tabularray,xcolor,lmodern,listings,tabularray,realboxes,mdframed}
+\usepackage[most]{tcolorbox}
+
+%caption的提示字体为英文无衬线,文字字体为英文倾斜或中文楷书
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+\usepackage[labelfont={small,sf},textfont={small,sl}]{caption}
+
+\newcommand{\IMU}{\textsf{IMU}}
+\newcommand{\degree}{^\circ}
+
+%C#代码环境
+\AtBeginDocument{\counterwithin{lstlisting}{section}}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{greencomments}{rgb}{0,0.5,0}
+\definecolor{redstrings}{rgb}{0.9,0,0}
+\definecolor{mygray}{rgb}{0.93,0.93,0.93}
+\tcbset{on line, 
+        boxsep=4pt, left=0pt,right=0pt,top=0pt,bottom=0pt,
+        colframe=white,  
+        }
+\lstset{language=[Sharp]C,
+    backgroundcolor=\color{mygray},
+    numbers=left, 
+    numberstyle=\small,
+    showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    frame = single,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    escapeinside={(*@}{@*)},
+    commentstyle=\color{greencomments},
+    keywordstyle=[1]\color{bluekeywords},
+    stringstyle=\color[RGB]{163,21,21},
+    basicstyle=\ttfamily,
+    deletekeywords = {public,internal,return,private},
+    captionpos=b
+}
+\lstset{
+    emph=[1]{IMatrix,IVector,Matrix,Matrix3d,Vector,Vector3d,Vector4d,Quaternion,VectorOperate,MatrixOperate,T,
+    BLHCoordinate,CoordinateSystem,Elliposid,IMUData,MotionState,INSAlgorithm,Application,Workbooks,Workbook,Range,
+    XlWBATemplate,ExportExcel,Worksheet,DataBase,EulerAngle,ASCData,BinaryData},
+    emphstyle=[1]{\color[RGB]{45,145,175}},
+    %
+    emph=[2]{Transpose,Trace,Inverse,FromRotationVector,Norm,Unitize,Update,AttitudeUpdate,VelocityUpdate,PositionUpdate,
+    AddExcel,GetExcel,CalAndExportExcel,ToQuaternion,IMUDataCal,ReferenceRead,CreatAndExportExcel},
+    emphstyle=[2]{\color[RGB]{116,83,31}},
+    %
+    emph=[3]{time,zeroVelCorrect,zeroLambda},
+    emphstyle=[3]{\color[RGB]{31,55,127}},
+}
+\lstset{
+    keywords=[2]{Math,Func},
+    keywordstyle=[2]\color[RGB]{45,145,175},
+    %
+    keywords=[3]{Sin,Cos,ToString,Atan2,Add},
+    keywordstyle=[3]\color[RGB]{116,83,31},
+    %
+    keywords=[4]{where},
+    keywordstyle=[4]\color[RGB]{65,180,116},
+    %
+    keywords=[5]{public,internal,private},
+    keywordstyle=[5]\color[RGB]{106,106,106},
+    %
+    keywords=[6]{return},
+    keywordstyle=[6]\color[RGB]{255,69,0},
+}
+\newcommand{\code}[1]{\tcbox{\small{\lstinline[breaklines=true]|#1|}}}
+
+\geometry{top=2.5cm,bottom=2.5truecm,left=2.5truecm,right=2.5truecm,includefoot,xetex}
+
+\setlength{\baselineskip}{22pt} %行间距22磅
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+%页眉页脚设置
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\allowdisplaybreaks[1]
+
+%\hypersetup{hidelinks,colorlinks=true,linkcolor=cyan,linktoc=page}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    linktoc=page,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdfauthor={陶安博},
+    pdfpagemode=FullScreen,
+}

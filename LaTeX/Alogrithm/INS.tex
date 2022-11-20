@@ -1,0 +1,414 @@
+\documentclass[10pt,a4paper]{ctexbook}
+
+\usepackage{geometry,amsmath,float,amsthm,amsfonts,xifthen,mathtools}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox,enumitem,bm}
+
+\geometry{top=3cm,bottom=3cm,left=2.5cm,right=2.5cm}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{exercise}{Problem}[section]
+
+\newenvironment{remark}{\par\noindent\textbf{Remark.}\;\kaishu}{\par}
+\newenvironment{solution}{\par\noindent\textit{Solution.}\;\fangsong}{\par}
+\renewcommand{\proofname}{Proof}
+\renewenvironment{proof}[1][]{\par\noindent\textit{\proofname\,#1.}\;\fangsong}{\hfill$\boxed{}$\par}
+
+\definecolor{myblue}{RGB}{75,109,147}
+
+\newtcolorbox[use counter=theorem,number within=section]{lemmaBox}[1][]{colback=SeaGreen!10!CornflowerBlue!10,colframe=myblue,
+    fonttitle=\bfseries,title=\textbf{Lemma}~\thetcbcounter.\;%
+        \ifthenelse{\isempty{#1}}%
+            {}%
+            {(#1)}%
+    ,fontupper=\kaishu}
+\newtcolorbox[use counter=theorem,number within=section]{theoremBox}[1][]{colback=SeaGreen!10!CornflowerBlue!10,colframe=myblue,
+    fonttitle=\bfseries,title=\textbf{Theorem}~\thetcbcounter.\;%
+        \ifthenelse{\isempty{#1}}%
+            {}%
+            {(#1)}%
+    ,fontupper=\kaishu}
+\newtcolorbox[use counter=theorem,number within=section]{corollaryBox}[1][]{colback=SeaGreen!10!CornflowerBlue!10,colframe=myblue,
+    fonttitle=\bfseries,title=\textbf{Corollary}~\thetcbcounter.\;%
+        \ifthenelse{\isempty{#1}}%
+            {}%
+            {(#1)}%
+    ,fontupper=\kaishu}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\newpage
+\pagenumbering{Roman}
+\setcounter{page}{1}
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\chapter{姿态表达式}
+
+\section{欧拉角}
+
+描述载体的一组欧拉角称为姿态角,包括航向角$\psi$,俯仰角$\theta$,横滚角$\phi$,它们的定义为
+\begin{enumerate}[noitemsep]
+    \kaishu
+    \item 航向角$\psi$:载体纵轴正方向在当地水平面上的投影与当地地理北向的夹角,北偏东为正,取值范围为$0^{\circ}\sim 360^{\circ}$或者$-180^{\circ}\sim 180^{\circ}$.
+    \item 俯仰角$\theta$:载体纵轴正方向与其水平投影线之间的夹角,当载体“抬头”时定义为正,取值范围为$-90^{\circ}\sim 90^{\circ}$.
+    \item 横滚角$\phi$:载体立轴正方向与载体纵轴所在铅垂面之间的夹角,当载体向右倾斜(如飞机右机翼下压)时为正,取值范围为$-180^{\circ}\sim 180^{\circ}$.
+\end{enumerate}
+下面推导姿态角对应的姿态矩阵,以$n$系为参考系,计算其转换到$b$系的坐标旋转矩阵.第一次转动为$n$系绕$z$轴转动$\psi$角,那么
+\[
+    \begin{bmatrix}
+        x^{b'} \\ y^{b'} \\ z^{b'}
+    \end{bmatrix}=\begin{bmatrix}
+        \cos\psi & \sin\psi & 0 \\
+        -\sin\psi & \cos\psi & 0 \\
+        0 & 0 & 1
+    \end{bmatrix}\begin{bmatrix}
+        x^n \\ y^n \\ z^n
+    \end{bmatrix},
+\]
+第二次转动为$b'$系绕其$y$轴转动$\theta$角,那么
+\[
+    \begin{bmatrix}
+        x^{b''} \\ y^{b''} \\ z^{b''}
+    \end{bmatrix}=\begin{bmatrix}
+        \cos\theta & 0 & -\sin\theta \\
+        0 & 1 & 0 \\
+        \sin\theta & 0 & \cos\theta
+    \end{bmatrix}\begin{bmatrix}
+        x^{b'} \\ y^{b'} \\ z^{b'}
+    \end{bmatrix},
+\]
+第三次转动为$b''$系绕其$x$轴转动$\phi$角,那么
+\[
+    \begin{bmatrix}
+        x^{b} \\ y^{b} \\ z^{b}
+    \end{bmatrix}=\begin{bmatrix}
+        1 & 0 & 0 \\
+        0 & \cos\phi & \sin\phi \\
+        0 & -\sin\phi & \cos\phi
+    \end{bmatrix}\begin{bmatrix}
+        x^{b''} \\ y^{b''} \\ z^{b''}
+    \end{bmatrix},
+\]
+将它们乘起来,便得到$n$系到$b$系的变换关系为
+\begin{equation}
+    \begin{bmatrix}
+        x^b \\ y^b \\ z^b
+    \end{bmatrix}=\begin{bmatrix}
+        \cos\theta\cos\psi & \cos\theta\sin\psi & -\sin\theta \\
+        -\cos\phi\sin\psi + \sin\phi\sin\theta\cos\psi & \cos\phi\cos\psi+\sin\phi\sin\theta\sin\psi & \sin\phi\cos\theta \\
+        \sin\phi\sin\psi + \cos\phi\sin\theta\cos\psi & -\sin\phi\cos\psi+\cos\phi\sin\theta\sin\psi & \cos\phi\cos\theta
+    \end{bmatrix}\begin{bmatrix}
+        x^n \\ y^n \\ z^n
+    \end{bmatrix}.
+\end{equation}
+我们记
+\[
+    \mathbf{C}_n^b=\begin{bmatrix}
+        \cos\theta\cos\psi & \cos\theta\sin\psi & -\sin\theta \\
+        -\cos\phi\sin\psi + \sin\phi\sin\theta\cos\psi & \cos\phi\cos\psi+\sin\phi\sin\theta\sin\psi & \sin\phi\cos\theta \\
+        \sin\phi\sin\psi + \cos\phi\sin\theta\cos\psi & -\sin\phi\cos\psi+\cos\phi\sin\theta\sin\psi & \cos\phi\cos\theta
+    \end{bmatrix}.
+\]
+值得注意的是,当俯仰角$\theta$为$\pm 90^{\circ}$的时候,姿态矩阵变为
+\begin{align*}
+    \mathbf{C}_n^b&=\begin{bmatrix}
+        0 & 0 & \mp 1 \\
+        -\cos\phi\sin\psi \pm \sin\phi\cos\psi & \cos\phi\cos\psi\pm\sin\phi\sin\psi & 0 \\
+        \sin\phi\sin\psi \pm \cos\phi\cos\psi & -\sin\phi\cos\psi\pm\cos\phi\sin\psi & 0
+    \end{bmatrix}\\
+    &=\begin{bmatrix}
+        0 & 0 & \mp 1 \\
+        -\sin(\psi \mp \phi) & \cos(\psi \mp \phi) & 0 \\
+        \pm\cos(\psi \mp \phi) & \pm\sin(\psi \mp \phi) & 0
+    \end{bmatrix}.
+\end{align*}
+也就是说,此时$b$系的坐标$x^b$始终等于$\mp z^n$,无论航向角和横滚角如何变化,都不改变$x$坐标,并且这两个角作用相同,使旋转丧失了一个自由度,这就是万向锁问题.%
+所以欧拉角不能用于全姿态导航,并且其难以将两次旋转叠加,所以一般不用于姿态更新算法.但是其描述转动直观易理解,所以常把其他描述姿态的方法转换为欧拉角展示结果.
+
+\section{四元数}
+
+先来看熟悉的复数域$\mathbb{C}$,对于矩阵$\begin{pmatrix}
+    a & -b \\ b & a
+\end{pmatrix}$,我们可以写成
+\[
+    \begin{pmatrix}
+        a & -b \\ b & a
+    \end{pmatrix} = a\mathbf{1}+b\mathbf{i},\,\,a,b\in\mathbb{R},
+\]
+其中
+\[
+    \mathbf{1}=\begin{pmatrix}
+        1 & 0 \\ 0 & 1
+    \end{pmatrix},\mathbf{i}=\begin{pmatrix}
+        0 & -1 \\ 1 & 0
+    \end{pmatrix},
+\]
+不难验证
+\[
+    \mathbf{1}^2=\mathbf{1},\mathbf{1}\mathbf{i}=\mathbf{i}\mathbf{1}=\mathbf{i},\mathbf{i}^2=\mathbf{1}.
+\]
+记所有矩阵$\begin{pmatrix}
+    a & -b \\ b & a
+\end{pmatrix}\,(a,b\in\mathbb{R})$构成的集合为$M_2$(容易验证这是一个域),考虑映射
+\[
+    \phi:\mathbb{C}\to M_2\,\,\, s.t. \,\,\, a+bi\mapsto \begin{pmatrix}
+        a & -b \\ b & a
+    \end{pmatrix}.
+\]
+由于
+\begin{gather*}
+    \phi((a+bi)+(c+di))=\phi((a+c)+(b+d)i)=\begin{pmatrix}
+        a+c & -(b+d) \\ b+d & a+c
+    \end{pmatrix}\\=\begin{pmatrix}
+        a & -b \\ b & a
+    \end{pmatrix} + \begin{pmatrix}
+        c & -d \\ d & c
+    \end{pmatrix}=\phi(a+bi)+\phi(c+di),
+\end{gather*}
+以及
+\begin{gather*}
+    \phi((a+bi)(c+di))=\phi((ac-bd)+(ad+bc)i)=\begin{pmatrix}
+        ac-bd & -(ad+bc) \\ ad+bc & ac-bd
+    \end{pmatrix}\\=\begin{pmatrix}
+        a & -b \\ b & a
+    \end{pmatrix}\begin{pmatrix}
+        c & -d \\ d & c
+    \end{pmatrix}=\phi(a+bi)\phi(c+di),
+\end{gather*}
+显然$\phi$是双射,所以复数域$\mathbb{C}$同构于矩阵域$M_2$.注意到
+\[
+    \phi(\cos\theta+i\sin\theta)=\begin{pmatrix}
+        \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta
+    \end{pmatrix},
+\]
+这从另一个角度说明了为什么单位复数$e^{i\theta}$可以表示旋转.上面的讨论告诉我们,一个复数完全等同于一个二阶矩阵,下面我们来定义四元数.%
+对于四个实数组成的数对$(a,b,c,d)$,定义对应的矩阵
+\[
+    q=\begin{pmatrix}
+        a+di & -b-ci \\ b-ci & a-di
+    \end{pmatrix},
+\]
+容易验证形如$q$的任意两个矩阵相加或者相乘后的结果仍然形如$q$,所以这是一个对乘法和加法封闭的集合.定义
+\[
+    |q|^2=\det q=a^2+b^2+c^2+d^2.
+\]
+所以$|q|^2$实际上是$(a,b,c,d)\in\mathbb{R}^4$到原点$O$的距离.此外,可以逐一验证其加法的交换律,结合律,乘法的结合律以及乘法与加法的左右分配律,%
+并且其有加法单位元,加法逆元,乘法单位元,对于$q\neq \mathbf{0}$有乘法逆元,但是没有乘法的交换律,所以这是一个非交换的除环.我们也可以将其写成
+\[
+    \begin{pmatrix}
+        a+di & -b-ci \\ b-ci & a-di
+    \end{pmatrix}=a\mathbf{1}+b\mathbf{i}+c\mathbf{j}+d\mathbf{k}
+\]
+的形式,其中
+\[
+    \mathbf{1}=\begin{pmatrix}
+        1 & 0 \\ 0 & 1
+    \end{pmatrix},\mathbf{i}=\begin{pmatrix}
+        0 & -1 \\ 1 & 0
+    \end{pmatrix},\mathbf{j}=\begin{pmatrix}
+        0 & -i \\ -i & 0
+    \end{pmatrix},\mathbf{k}=\begin{pmatrix}
+        i & 0 \\ 0 & -i
+    \end{pmatrix}.
+\]
+容易验证$\mathbf{i}^2=\mathbf{j}^2=\mathbf{k}^2=-\mathbf{1}$,并且$\mathbf{ij}=\mathbf{k},\mathbf{jk}=\mathbf{i},\mathbf{ki}=\mathbf{j}$.%
+类似复数,对于四元数的一些性质也可以用矩阵来验证:
+\begin{itemize}[noitemsep]
+    \item 四元数的模是结合的,即$|q_1q_2|=|q_1||q_2|$,这是因为行列式是结合的,即$\det(q_1 q_2)=\det(q_1)\det(q_2)$.
+    \item 任意非零四元数$q$都有唯一的逆元$q^{-1}$,满足$qq^{-1}=q^{-1}q=\mathbf{1}$:
+    \[
+        q^{-1}=\frac{1}{a^2+b^2+c^2+d^2}(a\mathbf{1}-b\mathbf{i}-c\mathbf{j}-d\mathbf{k}).
+    \]
+    \item 四元数$a\mathbf{1}-b\mathbf{i}-c\mathbf{j}-d\mathbf{k}$被称作$q=a\mathbf{1}+b\mathbf{i}+c\mathbf{j}+d\mathbf{k}$的共轭四元数,也记作%
+    $\overline{q}$,显然有$q\overline{q}=|q|^2$.
+    \item 四元数的共轭并不是对矩阵$q$的每一个元素取共轭复数,实际上,\,$\overline{q}$是对$q^{\top}$的每个元素取共轭复数的结果,由于%
+    $(q_1 q_2)^{\top}=q_2^{\top}q_1^{\top}$,所以$\overline{q_1 q_2}=\overline{q_2}\overline{q_1}$.
+\end{itemize}
+四元数代数在$1843$年由Hamilton创立,所以我们把四元数所构成的非交换除环记为$\mathbb{H}$.值得一提的是,正如单位复数可以描述二维空间中的旋转,%
+单位四元数也将在描述三维空间中的旋转上发挥巨大作用,而Hamilton本人并没有发现四元数和三维空间旋转的联系,单位四元数和旋转的关系是由数学家Cayley在1845年发表的.
+
+\subsection{单位四元数与纯虚四元数}
+如果四元数$a\mathbf{1}+b\mathbf{i}+c\mathbf{j}+d\mathbf{k}$的模为$1$,即$a^2+b^2+c^2+d^2=1$,那么我们称为\textbf{单位四元数}.它们组成了空间$\mathbb{R}^4$中的%
+一个三维球面,记作$\mathbb{S}^3$,显然两个单位四元数的乘积依然是单位四元数,所以$\mathbb{S}^3$在四元数乘法下构成一个群.就行单位复数组成的一维球面$\mathbb{S}^1$一样,%
+\,$\mathbb{S}^3$也形成了一个旋转群,虽然不是那么的直观.下面我们就来引入四元数的几何应用.
+
+首先假设$u$是一个模为$1$的复数,我们来说明在$\mathbb{C}=\mathbb{R}^2$中与$u$作乘法为什么能表示一个旋转.令$v$和$w$是任意两个复数,考虑%
+$uv$和$uw$之间的距离,由于
+\[
+    |uv-uw|=|u(v-w)|=|u||v-w|=|v-w|,
+\]
+所以$uv$和$uw$之间的距离等于$v$和$w$之间的距离,于是我们把这样的一个变换称为平面的\textbf{等距映射}.此外,等距映射使原点$O$保持不动,因为$u0=0$.如果$u\neq 1$,那么%
+除开$O$之外的所有点都会变化,而平面上满足这些属性的变换就只能是绕$O$点旋转.
+
+同样的论述也适用于四元数的乘法,如果我们把空间$\mathbb{R}^4$中的两个点分别乘以一个单位四元数,这两个点的距离依然保持不变,并且原点$O$保持不动,所以这是$\mathbb{R}^4$中%
+的一个等距映射,实际上我们也可以把这种等距称为``旋转'',但是我们想说明四元数乘法提供了一种思路去研究$\mathbb{R}^3$中的旋转,为了实现这一点,我们需要先研究四元数蕴含的一个自然的三维子空间.
+
+\subsubsection*{纯虚四元数}
+
+\textbf{纯虚四元数}指的是形如
+\[
+    p=b\mathbf{i}+c\mathbf{j}+d\mathbf{k}
+\]
+的四元数.它们组成了一个三维空间,即$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$,或者简写为$\mathbb{R}^3$.%
+相应的,实四元数形如$a\mathbf{1}$,这组成了空间$\mathbb{R}\mathbf{1}$,显然这与空间$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$正交.%
+现在开始我们把实四元数$a\mathbf{1}$简记为$a$,把实四元数组成的直线简记为$\mathbb{R}$.
+
+显然两个纯虚四元数的和依然是纯虚四元数,但是积未必.实际上,对于$u=u_1\mathbf{i}+u_2\mathbf{j}+u_3\mathbf{k}$和$v=v_1\mathbf{i}+v_2\mathbf{j}+v_3\mathbf{k}$,
+它们的积为
+\[
+    uv=-(u_1v_1+u_2v_2+u_3v_3)+(u_2v_3-u_3v_2)\mathbf{i}-(u_1v_3-u_3v_1)\mathbf{j}+(u_1v_2-u_2v_1)\mathbf{k}.
+\]
+这将$\mathbb{R}^3$中的两种运算联系起来,注意到$u$和$v$的内积为
+\[
+    u\cdot v=u_1v_1+u_2v_2+u_3v_3,
+\]
+叉积为
+\[
+    u\times v =\left|\begin{matrix}
+        \mathbf{i} & \mathbf{j} & \mathbf{k} \\
+        u_1 & u_2 & u_3 \\
+        v_1 & v_2 & v_3 
+    \end{matrix}\right|=(u_2v_3-u_3v_2)\mathbf{i}-(u_1v_3-u_3v_1)\mathbf{j}+(u_1v_2-u_2v_1)\mathbf{k}.
+\]
+所以纯虚四元数的乘法可以写成
+\begin{equation}
+    uv=-u\cdot v+u\times v.\label{multiply}
+\end{equation}
+可以发现$uv$依然是纯虚四元数当且仅当$u\cdot v=0$,即$u$和$v$正交.特别的,如果$u\in\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$并且$|u|=1$,那么
+\[
+    u^2=-u\cdot u=-|u|^2=-1.
+\]
+所以$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中所有单位向量都是$-1$的平方根,这也表明$\mathbb{H}$与常见的代数结构有很大不同.
+
+\subsection{四元数表示三维空间的旋转}
+
+一个单位四元数$t$,类似单位复数$e^{i\theta}=\cos\theta+i\sin\theta$,有一个``实部''$\cos\theta$和一个正交于实部的``虚部''$i\sin\theta$,而在四元数中%
+虚部为$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$,这意味着
+\[
+    t=\cos\theta +u\sin\theta,
+\]
+其中$u$是$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中的单位向量,在上一部分中,还有$u^2=-1$.
+
+$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中正是形如这样的四元数$t$表示了一个旋转,当然不是通过简单的乘法,因为$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$%
+中两个四元数的乘法不一定还在$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中.对于$q\in\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$,%
+我们考虑$tqt^{-1}$,由于
+\[
+    t^{-1}=\overline{t}/|t|^2=\cos\theta-u\sin\theta,
+\]
+对于映射$q\mapsto tqt^{-1}$容易验证这是一个可逆映射,所以这是一个$\mathbb{H}\to \mathbb{H}$的双射,我们称为$q$的$t$共轭.显然$\mathbb{R}$的$t$共轭还是%
+$\mathbb{R}$,所以这就表明$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$的$t$共轭还在$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中.
+
+\begin{theorem}
+    如果$t=\cos\theta+u\sin\theta$,其中$u\in\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$并且$|u|=1$,那么$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$%
+    中点的$t$共轭把空间$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$绕$u$轴正向旋转了$2\theta$角度.
+\end{theorem}
+\begin{proof}
+    首先证明直线$\mathbb{R}u$在$t$共轭的作用下保持不动:
+    \begin{align*}
+        tut^{-1}&=(\cos\theta+u\sin\theta)u(\cos\theta-u\sin\theta)\\
+        &=(u\cos\theta+u^2\sin\theta)(\cos\theta-u\sin\theta)\\
+        &=(u\cos\theta-\sin\theta)(\cos\theta-u\sin\theta)\\
+        &=u(\cos^2\theta+\sin^2\theta)-\sin\theta\cos\theta-u^2\sin\theta\cos\theta\\
+        &=u.
+    \end{align*}
+    现在我们选取一个$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$中垂直于$u$的单位向量$v$,即$u\cdot v=0$,再令$w=u\times v$,那么%
+    根据\eqref{multiply}式,所以$w=uv$,这样$\{v,w,u\}$构成了$\mathbb{R}\mathbf{i}+\mathbb{R}\mathbf{j}+\mathbb{R}\mathbf{k}$的一组正交基,并且%
+    $uv=w,vw=u,wu=v$,现在只需要说明$t$共轭等同于下面的旋转矩阵的效果即可:
+    \[
+        \begin{bmatrix}
+            v' \\ w' \\ u'
+        \end{bmatrix}=\begin{bmatrix}
+            \cos 2\theta & \sin 2\theta & 0 \\
+            -\sin 2\theta & \cos 2\theta & 0 \\
+            0 & 0 & 1
+        \end{bmatrix}\begin{bmatrix}
+            v \\ w \\ u
+        \end{bmatrix}.
+    \]
+    我们已经说明了$tut^{-1}=u$,所以只需要证明
+    \[
+        tvt^{-1}=v\cos 2\theta+w\sin 2\theta,twt^{-1}=w\cos 2\theta-v \sin 2\theta.
+    \]
+    直接计算可得:
+    \begin{align*}
+        tvt^{-1}&=(\cos\theta+u\sin\theta)v(\cos\theta -u\sin\theta)\\
+        &=(v\cos\theta+uv\sin\theta)(\cos\theta-u\sin\theta) \\
+        &=v\cos^2\theta-vu\sin\theta\cos\theta+uv\sin\theta\cos\theta-uvu\sin^2\theta\\
+        &=v\cos^2\theta+2uv\sin\theta\cos\theta+u^2v\sin^2\theta \\
+        &=v(\cos^2\theta-\sin^2\theta)+2w\sin\theta\cos\theta \\
+        &=v\cos 2\theta+w\sin 2\theta.
+    \end{align*}
+    对于$twt^{-1}$类似.
+\end{proof}
+\begin{theorem}
+    旋转的乘积还是一个旋转,旋转的逆也是一个旋转.(旋转构成一个群)
+\end{theorem}
+\begin{proof}
+    旋转的逆是一个旋转是显然的,只需要将$\theta$改为$-\theta$即可.下面我们证明旋转的乘积还是一个旋转.设旋转$r_1$是绕$u_1$轴旋转了%
+    $\alpha_1$度,旋转$r_2$绕$u_2$轴旋转了$\alpha_2$度,那么$r_1$可以由$t_1=\cos\frac{\alpha_1}{2}+u_1\sin\frac{\alpha_1}{2}$的共轭作用表示,%
+    $r_2$可以由$t_2=\cos\frac{\alpha_2}{2}+u_1\sin\frac{\alpha_2}{2}$的共轭作用表示,那么
+    \[
+        q\mapsto t_2(t_1qt_1^{-1})t_2^{-1}=(t_2t_1)q(t_2t_1)^{-1},
+    \]
+    记$t=t_2t_1$,根据前面的论述,这依然是一个单位四元数,所以
+    \[
+        t=\cos\frac{\alpha}{2}+u\sin\frac{\alpha}{2},
+    \]
+    这表明旋转$r_1$和$r_2$的复合相当于绕某个轴$u$转动$\alpha$度一次完成.
+\end{proof}
+\begin{remark}
+    这实际上就是欧拉旋转定理.
+\end{remark}
+
+\subsection{四元数的微分方程}
+假设一个动坐标系$b$系相对于参考系$R$系以角速度$\bm{\omega}_{Rb}$转动,记$b$系变换到$R$系的四元数为$\bm{q}_b^R$,也就是说,给定一个$b$系中的向量$\bm{v}^b$,%
+通过变换$\bm{q}_b^R \bm{v}^b {\bm{q}_b^{R}}^{-1}$即可变换到$R$系中的向量$\bm{v}^R$.用$\bm{q}_{b_1}^R$表示$t$时刻的四元数,\,$\bm{q}_{b_2}^R$表示$t+\Delta t$%
+时刻的四元数,那么对于$\bm{v}^{b_2}$,有
+\[
+    \bm{q}_{b_2}^R\bm{v}^{b_2}{\bm{q}_{b_2}^R}^{-1}=\bm{q}_{b_1}^R(\bm{q}_{b_2}^{b_1}\bm{v}^{b_2}{\bm{q}_{b_2}^{b_1}}^{-1}){\bm{q}_{b_1}^R}^{-1}
+    =(\bm{q}_{b_1}^{R}\bm{q}_{b_2}^{b_1})\bm{v}^{b_2}(\bm{q}_{b_1}^{R}\bm{q}_{b_2}^{b_1})^{-1},
+\]
+所以
+\[
+    \bm{q}_{b_2}^R=\bm{q}_{b_1}^R\bm{q}_{b_2}^{b_1}.
+\]
+记$\bm{q}_b^R$在$b_1$转到$b_2$的过程中的变化为
+\[
+    \Delta \bm{q}_b^R=\bm{q}_{b_2}^R-\bm{q}_{b_1}^R,
+\]
+所以
+\begin{equation}\label{eq:1.3}
+    \Delta\boldsymbol{q}_b^R =\boldsymbol{q}_{b_1}^R\boldsymbol{q}_{b_2}^{b_1} - \boldsymbol{q}_{b_1}^R =\boldsymbol{q}_{b_1}^R(\boldsymbol{q}_{b_2}^{b_1} -1).
+\end{equation}
+当$\Delta t\to 0$的时候,记$b_1$绕向量$\Delta\boldsymbol{\theta}$转动$|\Delta\boldsymbol{\theta}|$后与$b_2$对齐,即
+\[
+    \boldsymbol{q}_{b_2}^{b_1} = \cos \frac{|\Delta\boldsymbol{\theta}|}{2} + \frac{\Delta\boldsymbol{\theta}}{|\Delta\boldsymbol{\theta}|}\sin \frac{ |\Delta \boldsymbol{\theta}|}{2}, 
+\]
+那么
+\[
+    \boldsymbol{q}_{b_2}^{b_1} = 1 + \frac{ \Delta \boldsymbol{\theta}}{2} + o(1) \Delta \boldsymbol{\theta} + o(1),\quad \Delta t\to 0 
+\]
+代入\eqref{eq:1.3}式,所以
+\[
+    \lim_{\Delta t\to 0}\Delta\boldsymbol{q}_b^R =\lim_{\Delta t\to 0}\boldsymbol{q}_{b_1}^R(\boldsymbol{q}_{b_2}^{b_1} -1) = \frac{1}{2} \boldsymbol{q}_b^R \Delta \boldsymbol{ \theta }.
+\]
+那么我们可以得出
+\[
+    \dot{\boldsymbol{q}}_b^R(t) =\lim_{\Delta t\to 0} \frac{ \Delta \boldsymbol{q}_b^R}{ \Delta t}
+    = \frac{1}{2} \boldsymbol{q}_b^R \lim_{ \Delta t\to 0} \frac{ \Delta \boldsymbol{ \theta }}{ \Delta t}
+    =\frac{1}{2} \boldsymbol{q}_b^R \Delta \dot{ \boldsymbol{ \theta }}.
+\]
+
+
+
+
+\end{document}

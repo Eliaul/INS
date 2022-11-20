@@ -1,0 +1,38 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz,ctex}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{calc}
+\tikzset{%
+    >={Latex[width=2mm,length=2mm]},
+    base/.style = {rectangle, rounded corners, draw=black,
+                        minimum width=4cm, minimum height=1cm,
+                        text centered, font=\kaishu},
+    activityStarts/.style = {base, fill=blue!30},
+    startstop/.style = {base, fill=red!30},
+    activityRuns/.style = {base, fill=green!30},
+    process/.style = {base, minimum width=2.5cm, fill=orange!15,font=\fangsong},
+    judge/.style = {diamond, draw=black,shape aspect = 2,
+    text centered, font=\kaishu, fill = yellow!70},
+}
+\begin{document}
+\begin{tikzpicture}[node distance=2.5cm, every node/.style={fill=white, font=\sffamily}, align=center]
+    \node (start)[activityStarts]{编写数据处理程序};
+    \node (testProgram)[process, below of=start]{使用示例数据调试程序};
+    \node (judgeProgram)[judge, below of=testProgram, yshift=-0.5cm]{结果满足要求?};
+    \node (dataProcess)[process, below of=judgeProgram,yshift=-0.5cm]{用自编程序处理\\小推车实验数据};
+    \node (collectData)[activityStarts, right of=start, xshift=3cm]{采集小推车实测数据};
+    \node (analysis)[process, below of=dataProcess]{分析与评估};
+    \node (getAnswer)[process, right of=analysis, xshift=3cm]{原始数据\\发给助教};
+    %连线
+    \draw[->] (start) -- (testProgram);
+    \draw[->] (testProgram) -- (judgeProgram);
+    \draw[->] (judgeProgram) -- node[very near start, xshift=3mm, yshift=-0.5mm]{Y} (dataProcess);
+    \draw[->] (dataProcess) -- (analysis);
+    \node (p) at ($(collectData)!0.772!(getAnswer)$){};
+    \draw[->] (collectData) -- (getAnswer);
+    \draw[->] (p.center) -- (dataProcess);
+    \draw[->] (judgeProgram.west) -- node[very near start, yshift=3mm]{N} ++(-2,0) |- (testProgram.west);
+    \draw[->] (getAnswer) -- (analysis);
+\end{tikzpicture}
+\end{document}

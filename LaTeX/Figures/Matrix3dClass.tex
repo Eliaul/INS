@@ -1,0 +1,59 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgf-umlcd}
+\usepackage{fontspec,xcolor,ifthen,xifthen}
+
+\setmonofont[
+    AutoFakeSlant,
+    BoldItalicFeatures={FakeSlant},
+]{Inconsolatazi4}
+
+\newcommand{\fieldType}[2]{\texttt{\color{red}{#1:\hspace{1mm}#2}}}
+\newcommand{\funcType}[4][]{\texttt{\color{blue}{#2(#3)%
+    \ifthenelse{\isempty{#4}}%
+    {}%
+    {\hspace{1mm}#4}%
+    \ifthenelse{\isempty{#1}}%
+    {}%
+    {:\hspace{1mm}#1}%
+}}}
+
+\begin{document}
+
+\begin{tikzpicture}
+\begin{package}{LinerAlgebra}
+\begin{abstractclass}[text width =6.5 cm]{MatrixBase<Derived>}{0 ,1}
+\attribute{\# \fieldType{\_row}{int}}
+\attribute{\# \fieldType{\_col}{int}}
+\attribute{\# \fieldType{\_elements}{double[,]}}
+\operation[0]{+ \funcType[int]{Row}{}{}}
+\operation[0]{+ \funcType[Derived]{operator+}{Base,Base}{}}
+\operation[0]{+ \funcType[Derived]{operator*}{Base,double}{}}
+\operation[0]{+ \funcType[string]{ToString}{}{override}}
+\operation{...}
+\end{abstractclass}
+\begin{class}[text width =6.5cm]{Matrix3d}{-3.5 , -5}
+\inherit{MatrixBase<Derived>}
+\operation{+ \funcType{Mat3d}{}{}}
+\operation{+ \funcType[Mat3d]{Clone}{}{override}}
+\operation{+ \funcType[Mat3d]{operator*}{Mat3d,Mat3d}{}}
+\operation{+ \funcType[Vec3d]{operator*}{Mat3d,Vec3d}{}}
+\operation{+ \funcType[Mat3d]{Random}{}{static}}
+\operation{+ \funcType[Mat3d]{Inverse}{Mat3d}{static}}
+\operation{...}
+\end{class}
+\begin{class}[text width =6.5 cm]{Vector3d}{3.5 , -5}
+\inherit{MatrixBase<Derived>}
+\operation{+ \funcType{Vec3d}{}{}}
+\operation{+ \funcType[Vec3d]{Clone}{}{override}}
+\operation{+ \funcType[Vec3d]{Random}{}{static}}
+\operation{+ \funcType[double]{Dot}{Vec3d,Vec3d}{static}}
+\operation{+ \funcType[double]{Norm}{Vec3d}{static}}
+\operation{+ \funcType[Vec3d]{Unitize}{Vec3d}{static}}
+\operation{+ \funcType[\phantom{+ }\hspace{1mm}Vec3d]{CrossProduct}{Vec3d,Vec3d}{static}}
+\operation{...}
+\end{class}
+\end{package}
+\end{tikzpicture}
+
+\end{document}
